@@ -4,15 +4,9 @@ on:
   push:
     branches:
     - main
-    paths:
-    - '**.kicad_sch'
-    - '**.kicad_pcb'
   pull_request:
     branches:
     - main
-    paths:
-      - '**.kicad_sch'
-      - '**.kicad_pcb'
 
 jobs:
   kicad:
@@ -31,8 +25,8 @@ jobs:
       with:
         config: ${{ env.ConfigFilePath }}
         dir: ${{ env.OutputFolder }}
-        #schema: '${{ env.BaseFileName }}.${{ env.SchematicFileExtension }}'
-        #board: '${{ env.BaseFileName }}.${{ env.PCBFileExtension }}'
+        schema: 'pcb/${{ env.BaseFileName }}.${{ env.SchematicFileExtension }}'
+        board: 'pcb/${{ env.BaseFileName }}.${{ env.PCBFileExtension }}'
     
     - name: Archive artifacts
       uses: actions/upload-artifact@v4
