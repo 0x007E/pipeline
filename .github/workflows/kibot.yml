@@ -1,0 +1,37 @@
+name: KiCAD Pipeline
+
+on:
+  push:
+    paths:
+    - 'pcb/**.kicad_sch'
+    - 'pcb/**.kicad_pcb'
+  pull_request:
+    paths:
+      - 'pcb/**.kicad_sch'
+      - 'pcb/**.kicad_pcb'
+
+jobs:
+  kicad:
+    env:
+      BaseFileName: 'EBS'
+      SchematicFileExtension: 'kicad_sch'
+      PCBFileExtension: 'kicad_pcb'
+      OutputFolder: 'output'
+      ConfigFilePath: '.kibot/config.kibot.yaml'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch repository
+      uses: actions/checkout@v4
+    - name: Run KiBOT
+      uses: INTI-CMNB/KiBot@v2_k7
+      with:
+        config: ${{ env.ConfigFilePath }}
+        dir: ${{ env.OutputFolder }}
+        #schema: '${{ env.BaseFileName }}.${{ env.SchematicFileExtension }}'
+        #board: '${{ env.BaseFileName }}.${{ env.PCBFileExtension }}'
+    
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Pipeline artifact
+        path: ${{ env.OutputFolder }}
